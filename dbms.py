@@ -99,7 +99,10 @@ class DB:
         c = conn.cursor()
         c.execute('''SELECT password FROM users
                         WHERE username=?''', (username,))
-        hashed_pd = c.fetchone()[0]
+        try:
+            hashed_pd = c.fetchone()[0]
+        except TypeError:
+            return False
         c.close()
         conn.close()
         return bcrypt.checkpw(password.encode('utf-8'), hashed_pd)
